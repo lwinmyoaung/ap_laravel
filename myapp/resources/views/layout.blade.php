@@ -5,7 +5,6 @@
 </head>
 <h2 style="text-align: center"> Sample Blog Site</h2>
 <body>
-    <li><a href="/">Home page</a></li>
     @yield('content')
 </body>
 </html>
