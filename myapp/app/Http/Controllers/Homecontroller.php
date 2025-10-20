@@ -26,7 +26,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $data = Post::all();
+        $data = Post::where( 'user_id', auth()->user()->id )->get();
         return view('home',compact('data'));
     }
 
@@ -83,6 +83,13 @@ class HomeController extends Controller
         // Route Model Binding ကြောင့် id နဲ့ရှာဖွေရန်မလိုတော့ပါ
         // $post = Post::findOrfail($id);
 
+        // Manually Authorization Filter
+        // if( $post->user_id != auth()->id()){
+        //     abort(403);
+        // }
+
+        // Policy Authorization Filter
+        $this->authorize('view', $post);
         return view('show',compact('post'));
     }
 
@@ -94,6 +101,15 @@ class HomeController extends Controller
 
         // Route Model Binding ကြောင့် id နဲ့ရှာဖွေရန်မလိုတော့ပါ
         // $post = Post::findOrfail($id);
+        
+        // Manually Authorization Filter
+        // if( $post->user_id != auth()->id()){
+        //     abort(403);
+        // }
+
+        // Policy Authorization Filter
+        $this->authorize('view', $post);
+
         $categories = Category::all();
         return view('edit',compact('post','categories'));
     }

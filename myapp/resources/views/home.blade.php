@@ -9,6 +9,7 @@
                 @csrf
                 <button class="btn btn-secondary">Logout</button>
             </form>
+            <h4 style="float: right;">{{ Auth::user()->name }}</h4>
         </div><br>
         <div class="card">
             <div class="card-header" style="text-align: center">

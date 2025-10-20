@@ -5,3 +5,8 @@
 [x-cloak] {
     display: none;
 }
+
+/* npm run watch testing */
+body {
+    background-color: aquamarine;
+}
