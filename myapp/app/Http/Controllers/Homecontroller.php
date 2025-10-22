@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use App\Mail\PostStored;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Http\Requests\storeBlogPost;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\PostStoredUsingMarkdown;
 
 class HomeController extends Controller
 {
@@ -24,14 +27,35 @@ class HomeController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        // Collections testing function pluck()
+        // dd(Post::all()->pluck('name'));
+        
+        // Collections testing function collect()
+        // $collections = collect( ['lwin','myo','aung'] )->map(function($name){
+        //     return strtoupper($name);
+        // });
+        // dd($collections);
+
+        // // Testing Sending Mails
+        // $request->session()->flash('status','Task was successful!');
+
+        // // Testing mail config
+        // dd(config('mail.from.address'));
+
+        // // Sending mail using Demo
+        // Mail::raw('Hello World',function($msg){
+        //     $msg->to('lwin@gmail.com')
+        //         ->subject('AP Index Function');
+        // });
+
         $data = Post::where( 'user_id', auth()->user()->id )->get();
         return view('home',compact('data'));
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Show the form for creating a new resource. 
      */
     public function create()
     {
@@ -67,8 +91,14 @@ class HomeController extends Controller
 
         // Validated data တွေအကုန် saved
         $validated = $request->validated();
-        Post::create($validated);
-        return redirect('posts');
+        $post = Post::create($validated + ['user_id' => auth()->user()->id ]);
+
+        // // Sending Html using Mailtrap HTML Form
+        // Mail::to('lwin@gmail.com')->send(new PostStored($post));
+        // Sending Html using Mailtrap Markdown Form
+        Mail::to('lwin@gmail.com')->send(new PostStoredUsingMarkdown($post));
+        
+        return redirect('posts')->with('status',config('aprogrammer.message.created'));
     }
 
     /**
