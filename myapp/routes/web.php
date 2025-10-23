@@ -169,3 +169,8 @@ Route::post('logout', [AuthController::class, 'logout']);
 // Route::get('/', function () {
 //     dd(app('test')->execute());
 // });
+
+// // Testing Livewire
+// Route::get('/', function () {
+//     return view('welcomelivewire');
+// });

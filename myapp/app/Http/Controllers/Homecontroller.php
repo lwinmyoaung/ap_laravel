@@ -6,9 +6,13 @@ use App\Models\Post;
 use App\Mail\PostStored;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use App\Events\PostCreatedEvent;
 use App\Http\Requests\storeBlogPost;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\PostStoredUsingMarkdown;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\PostCreatedNotification;
 
 class HomeController extends Controller
 {
@@ -49,6 +53,16 @@ class HomeController extends Controller
         //     $msg->to('lwin@gmail.com')
         //         ->subject('AP Index Function');
         // });
+
+        // // Testing Notification Using Facade
+        // // Loop ပတ်ပြီးသုံးရင် ပိုအသုံးဝင်
+        // Notification::send(Auth::user(),new PostCreatedNotification());
+        // echo 'noti sent'; exit();
+
+        // // Testing Notification Using notify()
+        // $user = Auth::user();
+        // $user->notify(new PostCreatedNotification());
+        // echo 'noti sent'; exit();
 
         $data = Post::where( 'user_id', auth()->user()->id )->get();
         return view('home',compact('data'));
@@ -95,8 +109,11 @@ class HomeController extends Controller
 
         // // Sending Html using Mailtrap HTML Form
         // Mail::to('lwin@gmail.com')->send(new PostStored($post));
-        // Sending Html using Mailtrap Markdown Form
-        Mail::to('lwin@gmail.com')->send(new PostStoredUsingMarkdown($post));
+        // // Sending Html using Mailtrap Markdown Form
+        // Mail::to('lwin@gmail.com')->send(new PostStoredUsingMarkdown($post));
+
+        // // Testing Event Listener
+        // event(new PostCreatedEvent($post));
         
         return redirect('posts')->with('status',config('aprogrammer.message.created'));
     }
